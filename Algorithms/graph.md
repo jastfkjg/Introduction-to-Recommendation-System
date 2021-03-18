@@ -38,6 +38,35 @@ def bfs(G, start):
         nodes[u] = 2
 
 ```
+
+Kahn算法：利用bfs和入度 有向图找环/拓扑排序：
+```
+def bfs_topological_sort(n, edges):
+    G = [[] for _ in range(n)]
+    degrees = [0 for _ in range(n)]
+    for (i, j) in edges:
+        G[i] = j
+        degrees[j] += 1
+    queue = []
+    for i in range(n):
+        if degrees[i] == 0:
+            queue.append(i)
+    topological_sort = []
+    while queue:
+        n = queue.pop(0)
+        topological_sort.append(n)
+        for j in G[n]:
+            degrees[j] -= 1
+            if degrees[j] == 0:
+                queue.append(j)
+    
+    if len(topological_sort) == n:
+        # 图中无环，返回拓扑排序
+        return topological_sort
+    else:
+        # 图中有环，返回空
+        return []
+```
    
 ### 2. 深度优先搜索
 深度优先搜索 总是对最近才发现的节点的出发边进行探索，直到该节点的所有出发边都被发现为止。一旦节点v的所有出发边都被发现，则回溯到v的前驱节点，继续搜索前驱节点的出发边。
@@ -64,6 +93,42 @@ def dfs_visit(G, i):
     time += 1
     i.f = time
 ```
+dfs 通过节点上色检测有向图是否有环，并根据节点dfs结束时间来确定拓扑排序：
+```
+def dfs_topological_sort(n, edges):
+    G = [[] for _ in range(n)]
+    colors = [0 for _ in range(n)]
+    stack = []
+    for i in range(n):
+        if colors[i] == 0:
+            if dfs(i, G, colors, stack):
+                return []
+    return stack[::-1]
+
+def dfs(i, G, colors, stack):
+    # 如果存在环，返回True，stack记录节点完成顺序，是拓扑排序的逆序
+    if colors[i] == 1:
+        # 1: visiting, 说明存在环
+        return True
+    if colors[i] == 2:
+        return False
+    
+    colors[i] = 1
+    for j in G[i]:
+        if dfs(j, G, colors, stack):
+            return True
+    
+    colors[i] = 2
+    stack.append(i)
+
+    return False
+```
+
+对于无向图找环：
+
+1. 并查集
+2. dfs上色 + （记录前驱点 或 删除遍历过的边）
+3. bfs上色 + （记录前驱点 或 删除遍历过的边）
 
 **拓扑排序** 是有向无环图中所有节点的一种线性次序，满足如下条件：如果图中包含边(u,v)，则节点u在拓扑排序中处于节点v的前面。
 ```
