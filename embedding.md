@@ -33,6 +33,9 @@ Two solutions:
 
 Item2vec中把用户浏览的商品集合等价于word2vec中的word的序列，即句子。同样利用负采样得到每个商品的embedding representation，商品之间两两计算cosine相似度即为商品的相似度。
 
+## DeepWalk
+
+
 
 ## Node2Vec
 
