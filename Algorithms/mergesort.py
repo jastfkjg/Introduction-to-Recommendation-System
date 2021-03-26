@@ -2,8 +2,8 @@
 mergsort
 """
 def merge(A, p, q, r):
-    n1 = p - q + 1
-    n2 = r - q 
+    # n1 = p - q + 1
+    # n2 = r - q 
     left = A[p:q+1]
     right = A[q+1:r+1]
     # 加入哨兵牌
@@ -25,6 +25,40 @@ def merge_sort(A, p, r):
         merge_sort(A, p, q)
         merge_sort(A, q+1, r)
         merge(A, p, q, r)
+
+
+def merge_sort_with_index(nums, left, right):
+    index = [i for i in range(len(nums))]
+    if left < right:
+        mid = (left + right) // 2
+        merge_sort_with_index(nums, left, mid)
+        merge_sort_with_index(nums, mid+1, right)
+        merge_with_index(nums, left, mid, right, index)
+
+def merge_with_index(nums, left, mid, right, index):
+    i, j = left, mid+1
+    tmp = []
+    while i <= mid and j <= right:
+        if nums[i] <= nums[j]:
+            # res[index[i]] += j - mid - 1
+            tmp.append(nums[i])
+            i += 1
+        elif nums[i] > nums[j]:
+            tmp.append(nums[j])
+            j += 1
+
+    while i <= mid:
+        tmp.append(nums[i])
+        i += 1
+    
+    while j <= right:
+        tmp.append(nums[j])
+        j += 1
+
+    for m in range(len(tmp)):
+        index[left+m] = tmp[m]
+
+        
 
 """
 链表归并排序
