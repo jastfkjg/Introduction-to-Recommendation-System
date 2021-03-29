@@ -85,6 +85,11 @@ $$f(w, x) = \sum_i^n \sum_{j\neq i}^n w_{i, j}x_i x_j $$
 FM所做出的改进就是用两个向量的内积取代了单一的权重系数：FM为每一个特征学习了一个隐权重向量，在特征交叉时，使用两个特征隐向量的内积作为交叉特征的权重：
 $$ FM(w, x)=\sum_i^n \sum_{j\neq i}^n (w_i w_j)x_i x_j$$
 
+同时，FM的计算复杂度可以在线性时间内完成：
+<div align="center">
+<img src="images/FM_computation.png" width = "400">
+</div>
+
 优点：
 1. 将参数从$n^2$ 降到 $kn$， k为隐向量维度。
 2. 更好解决数据稀疏性问题。如A 的隐向量可以通过(A,B)样本来更新，C的隐向量可以通过 (C, D)样本更新。这样只用(A,B),(C,D)样本就能拟合A和C的交叉特征权重。

@@ -64,7 +64,7 @@ $$ AA^T (Ax) = A(A^TAx) = A\lambda x = \lambda (Ax)$$
 
 ## LDA (Linear Discriminant Analysis)
 
-是一种有监督的线性降维算法, LDA是为了使得降维后的数据点尽可能地容易被区分。
+是一种有监督的线性降维算法, LDA是为了使得降维后的数据点尽可能地容易被区分。目标：最小化类内距离和最大化类间距离。
 
 ## LLE (Locally Linear Embedding)
 LLE 是一种非线性降维算法，它能够使降维后的数据较好地保持原有 流形结构。

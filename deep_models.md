@@ -55,6 +55,16 @@ Bi-Interaction Pooling Layer 中特征交叉方法为两个向量的元素积（
 
 总的来说，NFM 并没有使用内积操作来进行特征 Embedding 向量的交叉，而是使用元素积的操作。在得到交叉特征向量之后，也没有使用 concatenate 操作把它们连接起来，而是采用了求和的池化操作，把它们叠加起来。
 
+## PNN 
+use product layers to explore feature interactions
+automatically.
+<div align="center">
+<img src="images/PNN.png" width = "450"  >
+</div>
+
+- IPNN: innner product
+- OPNN: outer product
+
 ## DIN
 
 下图就是 DIN 的基础模型 Base Model。我们可以看到，Base Model 是一个典型的 Embedding MLP 的结构。
