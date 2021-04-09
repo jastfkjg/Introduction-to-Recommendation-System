@@ -77,8 +77,16 @@ L1正则化在大规模在线机器学习算法中好像无法起到参数稀疏
 
 一些稀疏解的优化方法：
 ### 1. Truncated Gradient
+https://zr9558.com/2016/01/12/truncated-gradient/
 
 ### 2. FOBOS
+https://zr9558.com/2016/01/12/forward-backward-splitting-fobos/
+
+### 3. RDA 
+https://zr9558.com/2016/01/12/regularized-dual-averaging-algorithm-rda/
+
+### FTRL
+
 
 
 

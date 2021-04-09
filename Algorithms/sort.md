@@ -1,5 +1,9 @@
 # Sort
 
+<div align="center">
+<img src="../images/sort.jpg" width = "500">
+</div>
+
 ## heapsort
 最大堆 是一个数组，可以看成一个近似的完全二叉树，树中其父节点值大于子节点。
 ```
@@ -35,3 +39,9 @@ def heapsort(A):
 ```
 
 ## quicksort
+
+见`quicksort.py`
+
+## mergesort 
+
+见`mergesort.py`

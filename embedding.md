@@ -1,7 +1,6 @@
 # Embedding
 
 ## Word2Vec
-https://zhuanlan.zhihu.com/p/33799633
 
 ### Skip-gram
 > To find word representations that are useful for predicting the surrounding words. 
@@ -18,7 +17,8 @@ Two solutions:
 
 1. Hierarchical softmax:
     输出层从原始模型的利用softmax计算概率值改为了利用Huffman树计算概率值。
-2. Negative sampling:
+2. Negative sampling: https://www.cnblogs.com/pinard/p/7249903.html
+   
    把语料中的一个词串的中心词替换为别的词，构造语料中不存在的词串作为负样本。
    每次让一个训练样本仅仅更新一小部分的权重参数，从而降低梯度下降过程中的计算量。  
    使用 一元模型分布 (unigram distribution) 来选择 negative words，一个单词被选作 negative sample 的概率跟它出现的频次有关，出现频次越高的单词越容易被选作negative words。

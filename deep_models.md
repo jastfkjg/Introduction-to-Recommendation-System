@@ -12,6 +12,9 @@ Wide&Deep 模型的结构图了，它是由左侧的 Wide 部分和右侧的 Dee
 
 在 Deep 部分和 Wide 部分都构建完后，我们要使用 concatenate layer 把两部分连接起来，形成一个完整的特征向量，输入到最终的 sigmoid 神经元中，产生推荐分数。
 
+The wide component and deep component are combined
+using a weighted sum of their output log odds as the prediction which is then fed to one common logistic loss function for **joint training**. Note that there is a distinction between joint training and ensemble. In an ensemble, individual models are trained separately without knowing each other, and their predictions are combined only at inference time but not at training time. In contrast, joint training optimizes all parameters simultaneously by taking both the wide and deep part as well as the weights of their sum into account at training time.
+
 
 ## NeuralCF
 
@@ -65,6 +68,13 @@ automatically.
 - IPNN: innner product
 - OPNN: outer product
 
+PNN 对特征的线性和乘积操作后，并没有把结果直接送入MLP，而是在乘积层内部进行了局部全连接层的转换，分别将线性部分z，乘积部分p映射成D维的输入向量$l_z, l_p$，再将其叠加，输入到MLP中。
+
+PNN 强调特征Embedding向量之间的交叉方式是多样化的，相比于简单的交给MLP进行处理，PNN定义的内积或外积操作能让模型更容易捕获到特征的交叉信息。
+
+但PNN对所有特征进行了无差别的交叉，在一定程度上忽略了原始特征向量包含的有价值信息。
+
+
 ## DIN
 
 下图就是 DIN 的基础模型 Base Model。我们可以看到，Base Model 是一个典型的 Embedding MLP 的结构。
@@ -103,7 +113,7 @@ automatically.
 
 附：一些常用的序列模型结构
 <div align="center">
-<img src="images/RNN.jpg" width = "500">
+<img src="images/RNN.jpg" width = "400">
 </div>
 
 ## DRN
@@ -136,11 +146,66 @@ $ΔW=α⋅rand(−1,1)⋅W$
 3. 实时收集用户反馈。如果探索网络 Q～生成内容的效果好于当前网络 Q，我们就用探索网络代替当前网络，进入下一轮迭代。反之，我们就保留当前网络。
 
 
+## DMR
 
 
+## ESMM
+https://zhuanlan.zhihu.com/p/57481330
+
+1. Sample Selection Bias:
+Conventional CVR models are trained with samples of clicked impressions while utilized to make inference on the entire space with samples of all impressions. This causes a sample selection bias problem.
+2. Data sparsity
+CVR samples are much less than CTR.
+
+Conventional CVR makes an approximation:
+
+$$ p(z=1|y=1, x) \simeq p(z=1|x) $$
+
+<div align="center">
+<img src="images/ESMM.png" width = "480">
+</div>
+
+The loss function of DSMM consists of two loss terms from CTR and CTCVR calculated over samples of all impressions:
+
+$$ l(\theta_{ctr}, \theta_{cvr}) = \sum_i^N l(y_i, f(x_i;\theta_{ctr})) + \sum_i^N l(y_i\&z_i, f(x_i, \theta_{ctr})*f(x_i, \theta_{cvr}))$$
+
+In ESMM, embedding dictionary of CVR network is
+shared with that of CTR network.
+This parameter sharing mechanism enables CVR network in ESMM to learn from un-clicked impressions and provides great help for alleviating the data sparsity trouble.
+
+## MMoE 
+MMoE can better handle the situation where tasks are less related.
+<div align="center">
+<img src="images/MMoE.png" width = "500">
+</div>
+
+1. Shared-Bottom model: bottom layers are shared across all the tasks and then each task has an individual “tower” of network on top of the bottom representations.
+2. MoE (Mixture of Experts): has a group of bottom networks, each of which is called an expert.
+$$ y = \sum_i^n g(x)_i f_i(x)$$
+3. MMoE (Multi-gate MoE): The gating networks take the input features and output softmax gates assembling the experts with dierent weights, allowing dierent tasks to utilize experts dierently. In this way, the gating networks for dierent tasks can learn dierent mixture patterns of experts assembling, and thus capture the task relationships.
+we add a separate gating network gk for each task k:
+
+$$ y_k = \sum_i^n g^k(x)_i f_i(x)$$
+
+The gating networks are simply linear transformations
+of the input with a softmax layer:
+
+$$ g^k(x) = softmax(W_{gk}x)$$
+where $W_{gk}$ is a n*k matrix. n is the number of experts
+and d is the feature dimension.
+
+The MMoE model can indeed better handle the situation where tasks are less related.
+
+If the tasks are less related, then sharing experts
+will be penalized and the gating networks of these tasks will learn to utilize dierent experts instead.
 
 
+## DNN for YouTube 
+> Paper: "Deep Neural Networks for YouTube Recommendations"
 
+
+## Airbnb
+> Paper: "Real-time Personalization using Embeddings for Search Ranking at Airbnb"
 
 
 

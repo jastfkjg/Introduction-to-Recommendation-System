@@ -37,6 +37,16 @@ P 指的是真实的正样本数量，N 是真实的负样本数量；TP 指的�
 <img src="images/ROC.jpg" width = "300">
 </div>
 
+AUC计算：
+$$ AUC = 1 - \frac{\sum_{i \in Pos}rank_i - M(1+M)/2}{M*N}$$
+其中，M表示正样本数量，N表示负样本数量。分子表示负样本得分高于正样本的组合数，分母表示所有组合数。
+
+## GAUC
+
+GAUC is a weighted average of AUC calculated in the subset of samples group by the user. The weight can be impressions or clicks. An impression based GAUC is calculated as follows:
+
+$$ GAUC = \frac{\sum_i^n w_i AUC_i}{\sum_i^n w_i} = \frac{\sum_i^n impression_i AUC_i}{\sum_i^n impression_i}$$
+
 ## MAP
 平均精度均值 mAP（mAP，mean average precision）这个高阶指标，它除了在推荐系统中比较常用，在信息检索领域也很常用。mAP 其实是对平均精度（AP，average precision）的再次平均，因此在计算 mAP 前，需要先了解平均精度 AP。
 
