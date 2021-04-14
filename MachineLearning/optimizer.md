@@ -33,13 +33,15 @@ $$ \theta_{t+1} = \theta_t - \alpha \triangledown L(\theta_t) $$
 二阶法对目标函数做二阶泰勒展开，得到近似式：
 $$L(\theta_t + \epsilon) = L(\theta_t) + \triangledown L(\theta_t)^T \epsilon + \frac{1}{2}\epsilon^T\triangledown^2L(\theta_t)\epsilon $$
 
-得到二阶法对迭代公式：
+得到二阶法迭代公式：
 $$ \theta_{t+1} = \theta_t - \triangledown^2L(\theta_t)^{-1}\triangledown L(\theta_t) $$
 
-二阶法也称 **牛顿法**，二阶法的收敛速度要远快于一阶法。但在高维情况下，二阶法的Hessian矩阵求逆计算复杂度很高，且当目标函数非凸时，二阶法可能会收敛到鞍点。
+二阶法也称 **牛顿法**，二阶法的收敛速度要远快于一阶法。但在高维情况下，二阶法的Hessian矩阵求逆计算复杂度很高，且当目标函数非凸时，二阶法可能会收敛到鞍点。同时Hessian矩阵不一定是正定的。
+
+**拟牛顿法**：既然Hessian矩阵不一定正定，可以构造一个与Hessian矩阵相差不大的正定矩阵作为替代。此外，拟牛顿法迭代更新Hessian逆矩阵，而不用在每一时刻重新计算逆矩阵。如BFGS，DFP等。
 
 
-# 深度学习中常用优化方法：
+# 常见随机优化算法
 
 ## SGD
 
@@ -47,6 +49,21 @@ $$ \theta_{t+1}=\theta_t - \alpha g_t$$
 
 - 山谷：在两山壁间来回反弹。
 - 鞍点（一个方向两头翘，另一方向两头垂）：停在鞍点。
+
+## 随机坐标下降
+对模型维度进行采样，每次只计算损失函数对模型中某一个或几个维度的偏导数，更新相应的维度。
+
+## 随机优化算法改进
+1. 方差缩减法：
+   - 随机方差缩减梯度法 SVRG
+   - 随机平均梯度法 SAG
+   - 加速随机平均梯度法 SAGA
+- 这三种算法想法基本相同：即对随机梯度加入正则项，得到的正则随机梯度的方差会小于原始随机梯度的方差。
+https://zhuanlan.zhihu.com/p/22402784
+1. 算法组合
+
+
+# Ada系列算法
 
 ## Momentum 
 
@@ -68,6 +85,8 @@ $$ v_t = \beta_2 v_{t-1} + (1-\beta_2)g_t^2$$
 $$ \theta_{t+1} = \theta_t - \frac{\alpha \hat{m}_t}{\sqrt{\hat{v}_t + \epsilon}}$$
 
 With $\hat{m}_t = \frac{m_t}{1-\beta_1^t}$, $\hat{v}_t=\frac{v_t}{1-\beta_2^t}$
+
+# 在线稀疏优化算法
 
 ## FTRL
 
