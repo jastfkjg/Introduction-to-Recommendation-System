@@ -36,7 +36,7 @@ $$L(\theta_t + \epsilon) = L(\theta_t) + \triangledown L(\theta_t)^T \epsilon + 
 得到二阶法迭代公式：
 $$ \theta_{t+1} = \theta_t - \triangledown^2L(\theta_t)^{-1}\triangledown L(\theta_t) $$
 
-二阶法也称 **牛顿法**，二阶法的收敛速度要远快于一阶法。但在高维情况下，二阶法的Hessian矩阵求逆计算复杂度很高，且当目标函数非凸时，二阶法可能会收敛到鞍点。同时Hessian矩阵不一定是正定的。
+二阶法也称 **牛顿法**，二阶法的收敛速度要远快于一阶法。但在高维情况下，二阶法的Hessian矩阵求逆计算复杂度很高，且当目标函数非凸时，二阶法可能会收敛到鞍点。同时Hessian矩阵不一定是正定的。(正定：矩阵所有特征值均大于0，即函数的二阶偏导恒大于0)
 
 **拟牛顿法**：既然Hessian矩阵不一定正定，可以构造一个与Hessian矩阵相差不大的正定矩阵作为替代。此外，拟牛顿法迭代更新Hessian逆矩阵，而不用在每一时刻重新计算逆矩阵。如BFGS，DFP等。
 
@@ -60,7 +60,7 @@ $$ \theta_{t+1}=\theta_t - \alpha g_t$$
    - 加速随机平均梯度法 SAGA
 - 这三种算法想法基本相同：即对随机梯度加入正则项，得到的正则随机梯度的方差会小于原始随机梯度的方差。
 https://zhuanlan.zhihu.com/p/22402784
-1. 算法组合
+2. 算法组合
 
 
 # Ada系列算法
@@ -97,6 +97,35 @@ L1正则化在大规模在线机器学习算法中好像无法起到参数稀疏
 一些稀疏解的优化方法：
 ### 1. Truncated Gradient
 https://zr9558.com/2016/01/12/truncated-gradient/
+为了得到稀疏的特征权重，最简单粗暴的方式就是设定一个阈值，当 $\theta$ 的某维度上系数小于这个阈值时将其设置为 0（称作简单截断）。但实际中某个系数比较小可能是因为该维度训练不足引起的，简单进行截断会造成这部分特征的丢失。
+
+**简单截断法**：
+每k步采取如下更新方式：
+$$\theta_{t+1} = T_0(\theta_t - \alpha g_t, \epsilon)$$
+
+$$ T_0(v,\epsilon)=
+    \left\{ 
+    \begin{array}{lr} 
+    0 \quad if \ v \le \epsilon & \\
+    v \quad else & \\
+    \end{array} 
+    \right. $$
+
+**梯度截断**：
+$$\theta_{t+1} = T_1(\theta_t - \alpha g_t, \lambda, \epsilon)$$
+
+
+$$ T_1(v,\lambda, \epsilon)=
+    \left\{ 
+    \begin{array}{lr} 
+    max(0, v-\lambda) \quad if \ v \in [0, \epsilon] & \\
+    min(0, v+\lambda) \quad if \ v \in [-\epsilon, 0) & \\
+    v \quad else & \\
+    \end{array} 
+    \right. $$
+
+区别只是梯度截断增加了一个参数$\lambda$方便控制稀疏性，同时当$\lambda=0$时，梯度截断退化为简单截断。
+
 
 ### 2. FOBOS
 https://zr9558.com/2016/01/12/forward-backward-splitting-fobos/
